@@ -1,9 +1,28 @@
 from typing import IO
 
+word_digits = {
+    "one": 1,
+    "two": 2,
+    "three": 3,
+    "four": 4,
+    "five": 5,
+    "six": 6,
+    "seven": 7,
+    "eight": 8,
+    "nine": 9,
+}
+
 def find_digit(start: int, stop: int, line: str, skip: int=1) -> str:
     for char in range(start, stop, skip):
         if line[char].isdigit():
             return line[char]
+
+        for word, digit in word_digits.items():
+            if word.startswith(line[char]) and line[char : len(word) + char] == word:
+                return str(digit)
+
+            if word.endswith(line[char]) and line[len(word)-char : char+1] == word:
+                return str(digit)
     return "0"
 
 def main(line: str) -> int:
@@ -17,5 +36,3 @@ if __name__ == "__main__":
 
     for line in inputs:
         result += main(line)
-
-    print(result)
