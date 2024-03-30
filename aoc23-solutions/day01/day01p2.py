@@ -12,16 +12,16 @@ word_digits = {
     "nine": 9,
 }
 
-def find_digit(start: int, stop: int, line: str, skip: int=1) -> str:
-    for char in range(start, stop, skip):
-        if line[char].isdigit():
-            return line[char]
+def find_digit(
+    start: int, stop: int, line: str, skip: int=1
+) -> str:
+    
+    for idx in range(start, stop, skip):
+        if line[idx].isdigit():
+            return line[idx]
 
         for word, digit in word_digits.items():
-            if word.startswith(line[char]) and line[char : len(word) + char] == word:
-                return str(digit)
-
-            if word.endswith(line[char]) and line[len(word)-char : char+1] == word:
+            if line.startswith(word, idx):
                 return str(digit)
     return "0"
 
@@ -36,3 +36,4 @@ if __name__ == "__main__":
 
     for line in inputs:
         result += main(line)
+    print(result)
