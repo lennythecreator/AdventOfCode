@@ -1,40 +1,30 @@
-from typing import IO
+from itertools import batched
+import sys
 
-def is_possible(
-    cubes: str,
-    colors: dict
-) -> bool:
-    
-    cubes_split = cubes.split(';')
+RED = 12
+GREEN = 13
+BLUE = 14
 
-    for _, cube in enumerate(cubes_split):
-        cube_subset = cube.split(',')
+def is_possible(count: str, color: str) -> bool:
+    """match the color to a case and return a boolean."""
+    match color:
+        case "r":
+            return int(count) <= RED
+        case "g":
+            return int(count) <= GREEN
+        case "b":
+            return int(count) <= BLUE
+        case _:
+            return 0
 
-        for subset in cube_subset:
-            count, color = subset.strip().split(' ')
-            if colors[color] < int(count):
-                return False
-    return True
-
-
-def main(line: str) -> int:
-    game, cubes = line.split(':')
-    _, game_number = game.split(' ')
-
-    if is_possible(
-        cubes,
-        { 'red' : 12, 'green' : 13, 'blue' : 14 }
-    ):
-        return int(game_number)
-    return 0
-
-
-if __name__ == "__main__":
-    inputs: IO[str] = open(file="input.txt", mode="r", encoding="utf-8").readlines()
+def main():
     result: int = 0
 
-    for idx, line in enumerate(inputs):
-        result += main(line)
+    for idx, line in enumerate(sys.stdin):
+        _, _, *pulls = line.split()
+        if all( is_possible(count, color[0]) for count, color in batched(pulls, 2) ):
+            result += idx + 1
     print(result)
 
-# testing git hooks
+if __name__ == "__main__":
+    main()
