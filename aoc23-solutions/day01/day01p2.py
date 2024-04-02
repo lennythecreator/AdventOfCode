@@ -1,4 +1,5 @@
-from typing import IO
+import sys
+from typing import Iterable
 
 word_digits = {
     "one": 1,
@@ -12,28 +13,17 @@ word_digits = {
     "nine": 9,
 }
 
-def find_digit(
-    start: int, stop: int, line: str, skip: int=1
-) -> str:
-    
-    for idx in range(start, stop, skip):
-        if line[idx].isdigit():
-            return line[idx]
+def find_digit(line: Iterable[str]) -> str:
+    for c in line:
+        if c.isdigit():
+            return int(c)
+    raise ValueError(f"No digits found in {line}.")
 
-        for word, digit in word_digits.items():
-            if line.startswith(word, idx):
-                return str(digit)
-    return "0"
+def get_value(line: str) -> int:
+    return 10 * find_digit(line) + find_digit(reversed(line))
 
-def main(line: str) -> int:
-    size: int = len(line)
-    str_number = find_digit(0, size, line) + find_digit(size - 1, -1, line, skip=-1)
-    return int(str_number)
+def main():
+    print(sum(get_value(line) for line in sys.stdin))
 
 if __name__ == "__main__":
-    inputs: IO[str] = open(file="input.txt", mode="r", encoding="utf-8").readlines()
-    result: int = 0
-
-    for line in inputs:
-        result += main(line)
-    print(result)
+    main()
